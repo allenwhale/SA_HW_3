@@ -62,9 +62,31 @@ if ! [ -e ${SOURCE} ] ; then
 fi
 IFS=","
 for lang in ${LANG} ; do
-    if [ ${lang} = "g" ] ; then
-	echo "yeap"
+    if [ ${lang} = "c" ] || [ ${lang} = "C" ] ; then
+	echo "C"
+    elif [ ${lang} = "c" ] || [ ${lang} = "cpp" ] || [ ${lang} = "Cpp" ] \
+	|| [ ${lang} = "c++" ] || [ ${lang} = "C++" ] ; then 
+	echo "C++"
+    elif [ ${lang} = "awk" ] || [ ${lang} = "AWK" ] ; then
+	echo "AWK"
+    elif [ ${lang} = "perl" ] || [ ${lang} = "Perl" ] ; then
+	echo "PERL"
+    elif [ ${lang} = "python" ] || [ ${lang} = "Python" ] || [ ${lang} = "py" ] \
+	|| [ ${lang} = "python2" ] || [ ${lang} = "Python2" ] || [ ${lang} = "py2" ] ; then
+	echo "PYTHON2"
+    elif [ ${lang} = "python3" ] || [ ${lang} = "Python3" ] || [ ${lang} = "py3" ] ; then
+	echo "PYTHON3"
+    elif [ ${lang} = "ruby" ] || [ ${lang} = "Ruby" ] || [ ${lang} = "rb" ] ; then
+	echo "RUBY"
+    elif [ ${lang} = "Haskell" ] || [ ${lang} = "haskell" ] || [ ${lang} = "hs" ] ; then
+	echo "HASKELL"
+    elif [ ${lang} = "lua" ] || [ ${lang} = "Lua" ] ; then
+	echo "LUA"
+    elif [ ${lang} = "bash" ] || [ ${lang} = "Bash" ] ; then
+	echo "BASH"
+    else
+	echo "'${lang}' is undefined"
     fi
-    echo ${lang}
+    
 done
 Usage
