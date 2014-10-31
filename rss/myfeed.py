@@ -35,9 +35,6 @@ class RSS:
             f.close()
             raise RuntimeError
 
-    def get_url(self):
-        return self.url
-
     def get_title(self):
         return self.title.split(' ')[0]
 
@@ -47,17 +44,6 @@ class RSS:
     def get_items(self):
         return self.items
 
-    def get_nth_item(self, n):
-        assert( n < len(self.items))
-        return self.items[n]
-
-
-
-def __test():
-    r = RSS('http://feeds.bbci.co.uk/news/rss.xml')
-    r = RSS('http://rss.slashdot.org/Slashdot/slashdot')
-    r = RSS('http://www.phoronix.com/rss.php')
-    r = RSS('http://www.36kr.com/feed/')
 def write_title(title_list):
     f = open(TITLE_FILE,"w")
     for i in title_list:
