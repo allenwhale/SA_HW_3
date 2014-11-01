@@ -6,25 +6,15 @@ OUTPUT='sa.out'
 LANG=''
 COMPILER='gcc'
 CC='gcc48'
-USE_CC=0
 CPP='env g++48'
-USE_CPP=0
 AWK='env awk -f'
-USE_AWK=0
 PERL='env perl'
-USE_PERL=0
 PYTHON2='env python'
-USE_PYTHON2=0
 PYTHON3='env python3'
-USE_PYTHON3=0
 RUBY='env ruby'
-USE_RUBY=0
 HASKELL='env ghc'
-USE_HASKELL=0
 LUA='env lua52'
-USE_LUA=0
-BASH='env sh'
-USE_BASH=0
+BASH='env bash'
 Usage(){
     echo "usage: polyglot.sh [-h] -s SOURCEFILE [-o OUTPUTFILE] -l LANGUAGE [-c COMPILER]"
     echo "-h: show this usage"
