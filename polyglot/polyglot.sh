@@ -25,7 +25,6 @@ Usage(){
 }
 
 while getopts hl:s:o:c: op ; do
-    echo "${OPTIND}-th arg ${op}"
     case $op in 
 	h)
 	    HELP=1;;
@@ -41,7 +40,6 @@ while getopts hl:s:o:c: op ; do
 	    echo "defualt";;
     esac
 done
-echo "${HELP} ${SOURCE} ${OUTPUT} ${LANG} ${COMPILER}"
 if [ ${HELP} -eq 1 ] ; then 
     Usage
     exit 0
@@ -88,11 +86,11 @@ for lang in ${LANG} ; do
 	echo "==================================================="
     elif [ ${lang} = "python" ] || [ ${lang} = "Python" ] || [ ${lang} = "py" ] \
 	|| [ ${lang} = "python2" ] || [ ${lang} = "Python2" ] || [ ${lang} = "py2" ] ; then
-	echo "Run in Python"
+	echo "Run in Python2"
 	eval "${PYTHON2} ${SOURCE}"
 	echo "==================================================="
     elif [ ${lang} = "python3" ] || [ ${lang} = "Python3" ] || [ ${lang} = "py3" ] ; then
-	echo "Run in Python2"
+	echo "Run in Python3"
 	eval "${PYTHON3} ${SOURCE}"
 	echo "==================================================="
     elif [ ${lang} = "ruby" ] || [ ${lang} = "Ruby" ] || [ ${lang} = "rb" ] ; then
