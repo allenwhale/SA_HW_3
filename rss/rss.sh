@@ -15,22 +15,16 @@ Menu(){
     env rm ${TEMP_FILE}
     case ${action} in
 	'R')
-	    NOW_PAGE='Read'
-	    ;;
+	    NOW_PAGE='Read';;
 	'S')
-	    NOW_PAGE='Subscribe'
-	    ;;
+	    NOW_PAGE='Subscribe';;
 	'D')
-	    NOW_PAGE='Delete'
-	    ;;
+	    NOW_PAGE='Delete';;
 	'U')
-	    NOW_PAGE='Update'
-	    ;;
+	    NOW_PAGE='Update';;
 	'Q')
-	    NOW_PAGE='Quit'
-	    ;;
+	    NOW_PAGE='Quit';;
     esac
-
 }
 Read(){
     s=''
