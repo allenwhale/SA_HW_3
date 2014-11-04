@@ -250,6 +250,6 @@ while [ 1=1 ]; do
 	'Quit')
 	    Quit;;
 	'Exit')
-	    break;;
+	    exit 0;;
     esac
 done
