@@ -1,10 +1,11 @@
 #!/bin/sh
-RSS_DIR='/home/allenwhale/.feed'
+RSS_DIR="${HOME}/.feed"
 TEMP_FILE=${RSS_DIR}'/.tmp'
 TITLE_FILE=${RSS_DIR}'/title'
 ITEM_FILE=${RSS_DIR}'/item_view'
 SUSCRIPTION=''
 NOW_PAGE='Welcome'
+mkdir ${RSS_DIR} > /dev/null 2>&1
 Welcome(){
     env dialog --title 'RSS Reader' --msgbox 'My RSS Reader' 0 0 
     NOW_PAGE='Menu'

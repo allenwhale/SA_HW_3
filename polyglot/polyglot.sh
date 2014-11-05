@@ -1,5 +1,4 @@
 #!/bin/sh
-#!/usr/bin/env gcc48
 HELP=0
 SOURCE=''
 OUTPUT='sa.out'
@@ -68,13 +67,21 @@ for lang in ${LANG} ; do
     if [ ${lang} = "c" ] || [ ${lang} = "C" ] ; then
 	echo "Run in C"
 	eval "${CC} ${SOURCE} -o ${OUTPUT}"
-	./${OUTPUT}
+	if  [ -e ${OUTPUT} ] ; then 
+	    ./${OUTPUT}
+	else
+	    echo "C failed"
+	fi
 	echo "==================================================="
     elif [ ${lang} = "c" ] || [ ${lang} = "cpp" ] || [ ${lang} = "Cpp" ] \
 	|| [ ${lang} = "c++" ] || [ ${lang} = "C++" ] ; then 
 	echo "Run in C++"
 	eval "${CPP} ${SOURCE} -o ${OUTPUT}"
-	./${OUTPUT}
+	if  [ -e ${OUTPUT} ] ; then 
+	    ./${OUTPUT}
+	else
+	    echo "C++ failed"
+	fi
 	echo "==================================================="
     elif [ ${lang} = "awk" ] || [ ${lang} = "AWK" ] ; then
 	echo "Run in Awk"
@@ -100,7 +107,11 @@ for lang in ${LANG} ; do
     elif [ ${lang} = "Haskell" ] || [ ${lang} = "haskell" ] || [ ${lang} = "hs" ] ; then
 	echo "Run in Haskell"
 	eval "${HASKELL} -o ${OUTPUT} ${SOURCE}"
-	./${OUTPUT}
+	if  [ -e ${OUTPUT} ] ; then 
+	    ./${OUTPUT}
+	else
+	    echo "haskell failed"
+	fi
 	echo "==================================================="
     elif [ ${lang} = "lua" ] || [ ${lang} = "Lua" ] ; then
 	echo "Run in Lua"
