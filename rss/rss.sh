@@ -36,7 +36,9 @@ Read(){
 	    return
 	fi
 	if [ $flag -eq 1 ] ; then
-	    s=${s}' '${cnt}' '${line}' '
+	    #s=${s}' '${cnt}' '\""${line}"\"' '
+	    #s="${s} ${cnt} "\"${line}\"""
+	    s=${s}' '${cnt}' '\""${line}"\"' '
 	    flag='0'
 	    eval TITLE_NAME$cnt='${line}'
 	    cnt=$((${cnt} + 1))
@@ -49,7 +51,7 @@ Read(){
 	NOW_PAGE='Menu'
 	return 
     fi
-    env dialog --title 'Read' --menu 'choose subscription' 0 0 $(($cnt - 1)) ${s} 2>${TEMP_FILE}
+    eval env dialog --title \'Read\' --menu \'choose subscription\' 0 0 $(($cnt - 1)) ${s} 2>${TEMP_FILE}
     if [ $? -eq 1 ] ; then 
 	NOW_PAGE='Menu'
 	return
@@ -138,7 +140,7 @@ Delete(){
     cnt='1'
     while read line ; do
 	if [ $flag -eq 1 ] ; then
-	    s=${s}' '${cnt}' '${line}' '
+	    s=${s}' '${cnt}' '\""${line}"\"' '
 	    flag='0'
 	    eval TITLE_NAME$cnt='${line}'
 	    cnt=$((${cnt} + 1))
@@ -151,7 +153,7 @@ Delete(){
 	NOW_PAGE='Menu'
 	return 
     fi
-    env dialog --title 'Delete' --menu 'choose item to delete' 0 0 ${cnt} ${s} 2>${TEMP_FILE}
+    eval env dialog --title \'Delete\' --menu \'choose item to delete\' 0 0 ${cnt} ${s} 2>${TEMP_FILE}
     if [ $? -eq 1 ] ; then 
 	NOW_PAGE='Menu'
 	return
@@ -159,7 +161,7 @@ Delete(){
     SUBSCRIPTION=$(cat ${TEMP_FILE})
     env rm ${TEMP_FILE}
     eval SUBSCRIPTION=\$TITLE_NAME$SUBSCRIPTION
-    env python3 myfeed.py -d $SUBSCRIPTION
+    env python3 myfeed.py -d "$SUBSCRIPTION"
     tmp=$(cat ${TEMP_FILE})
     if [ ${#tmp} -eq 0 ] ; then
 	env dialog --title 'Delete' --msgbox 'OK' 0 0
@@ -173,7 +175,7 @@ Update(){
     cnt='1'
     while read line ; do
 	if [ $flag -eq 1 ] ; then
-	    s=${s}' '${cnt}' '${line}' off '	    
+	    s=${s}' '${cnt}' '\""${line}"\"' off '	    
 	    flag='0'
 	    eval TITLE_NAME$cnt='${line}'
 	else
@@ -187,7 +189,7 @@ Update(){
 	NOW_PAGE='Menu'
 	return 
     fi
-    env dialog --title 'Update' --checklist 'choose item to delete' 0 0 ${cnt} ${s} 2>${TEMP_FILE}
+    eval env dialog --title \'Update\' --checklist \'choose item to delete\' 0 0 ${cnt} ${s} 2>${TEMP_FILE}
     if [ $? -eq 1 ] ; then 
 	NOW_PAGE='Menu'
 	return
@@ -203,7 +205,7 @@ Update(){
     for i in $SUBSCRIPTION ; do
         eval SUBSCRIPTION=\$TITLE_NAME$i
 	eval SUBSCRIPTIONURL=\$TITLE_URL$i
-	env python3 myfeed.py -u $SUBSCRIPTIONURL $SUBSCRIPTION 
+	env python3 myfeed.py -u $SUBSCRIPTIONURL "$SUBSCRIPTION"
 	tmp=$(cat ${TEMP_FILE})
 	env rm ${TEMP_FILE}
 	if [ ${#tmp} -eq 0 ] ; then
@@ -213,7 +215,7 @@ Update(){
 	    OK=1
 	    break
 	fi
-    done | env dialog --title 'Update' --guage 'Please wait' 0 0
+    done | env dialog --title 'Update' --guage 'Please wait' 10 50
     if [ ${OK} -eq 0 ] ; then 
 	env dialog --title 'Update' --msgbox 'Success' 0 0
     else

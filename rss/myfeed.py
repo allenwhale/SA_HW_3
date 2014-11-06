@@ -18,14 +18,14 @@ class RSS:
                 self.items = list(zip(
                     [ x.text.replace('\"',' ').replace('\'',' ') for x in main.xpath("/html/body/rss/channel/item[*]/title") ],
                     [ x.text.replace('\"',' ').replace('\'',' ')for x in main.xpath('/html/body/rss/channel/item[*]/guid') ],
-                    [ x.text.split('<')[0].replace('\"',' ').replace('\'',' ') for x in main.xpath("/html/body/rss/channel/item[*]/description") ]))
+                    [ x.text.replace('\"',' ').replace('\'',' ') for x in main.xpath("/html/body/rss/channel/item[*]/description") ]))
             elif main.xpath("/html/body/feed"):
                 self.title = main.xpath("/html/body/feed/title")[0].text
                 self.desc = main.xpath("/html/body/feed/subtitle")[0].text
                 self.items = list(zip(
                     [ x.text.replace('\"',' ').replace('\'',' ') for x in main.xpath("/html/body/feed/entry[*]/title") ],
                     [ x.text.replace('\"',' ').replace('\'',' ') for x in main.xpath('/html/body/feed/entry[*]/origlink') ],
-                    [ x.text.split('<')[0].replace('\"',' ').replace('\'',' ') for x in main.xpath("/html/body/feed/entry[*]/content") ]))
+                    [ x.text.replace('\"',' ').replace('\'',' ') for x in main.xpath("/html/body/feed/entry[*]/content") ]))
             else:
                 pass
 
@@ -36,7 +36,7 @@ class RSS:
             raise RuntimeError
 
     def get_title(self):
-        return self.title.split(' ')[0]
+        return self.title
 
     def get_desc(self):
         return self.desc
