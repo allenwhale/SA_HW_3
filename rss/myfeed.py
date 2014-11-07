@@ -9,23 +9,24 @@ class RSS:
     def __init__(self, url):
         assert(url != "")
         self.url = url
-
+        self.title = 'None'
+        self.desc = 'None'
         try:
             main = lxml.html.parse(self.url)
             if main.xpath("/html/body/rss"):
-                self.title = main.xpath("/html/body/rss/channel/title")[0].text
-                self.desc = main.xpath("/html/body/rss/channel/description")[0].text
+                self.title = str(main.xpath("/html/body/rss/channel/title")[0].text)
+                self.desc = str(main.xpath("/html/body/rss/channel/description")[0].text)
                 self.items = list(zip(
-                    [ x.text.replace('\"','\\\\\\\"') for x in main.xpath("/html/body/rss/channel/item[*]/title") ],
-                    [ x.text.replace('\"','\\\\\\\"') for x in main.xpath('/html/body/rss/channel/item[*]/guid') ],
-                    [ x.text.replace('\"','\\\\\\\"') for x in main.xpath("/html/body/rss/channel/item[*]/description") ]))
+                    [ str(x.text).replace('\"','\\\\\\\"') for x in main.xpath("/html/body/rss/channel/item[*]/title") ],
+                    [ str(x.text).replace('\"','\\\\\\\"') for x in main.xpath('/html/body/rss/channel/item[*]/guid') ],
+                    [ str(x.text).replace('\"','\\\\\\\"') for x in main.xpath("/html/body/rss/channel/item[*]/description") ]))
             elif main.xpath("/html/body/feed"):
-                self.title = main.xpath("/html/body/feed/title")[0].text
-                self.desc = main.xpath("/html/body/feed/subtitle")[0].text
+                self.title = str(main.xpath("/html/body/feed/title")[0].text)
+                self.desc = str(main.xpath("/html/body/feed/subtitle")[0].text)
                 self.items = list(zip(
-                    [ x.text.replace('\"','\\\\\\\"') for x in main.xpath("/html/body/feed/entry[*]/title") ],
-                    [ x.text.replace('\"','\\\\\\\"') for x in main.xpath('/html/body/feed/entry[*]/origlink') ],
-                    [ x.text.replace('\"','\\\\\\\"') for x in main.xpath("/html/body/feed/entry[*]/content") ]))
+                    [ str(x.text).replace('\"','\\\\\\\"') for x in main.xpath("/html/body/feed/entry[*]/title") ],
+                    [ str(x.text).replace('\"','\\\\\\\"') for x in main.xpath('/html/body/feed/entry[*]/origlink') ],
+                    [ str(x.text).replace('\"','\\\\\\\"') for x in main.xpath("/html/body/feed/entry[*]/content") ]))
             else:
                 pass
 
@@ -73,14 +74,14 @@ def get_title_list():
 def add_feed(url):
     rss = RSS(url)
     title = rss.get_title()
-    items = rss.get_items()
+    #items = rss.get_items()
     title_list = get_title_list()
     for i in title_list:
         if i[0]==title:
             return 'Exist'
     title_list.append((title,url))
     write_title(title_list)
-    write_items(title,items)
+    #write_items(title,items)
     return None
 def update_feed(url, title):
     title_list = get_title_list()

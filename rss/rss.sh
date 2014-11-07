@@ -62,6 +62,12 @@ Read(){
     NOW_PAGE='ReadItems'
 }
 ReadItems(){
+
+    if ! [ -e "${RSS_DIR}/${SUBSCRIPTION}" ] ; then 
+	dialog --clear --title 'ReadItems' --msgbox 'Please update first' 0 0 
+	NOW_PAGE='Read'
+	return
+    fi
     if [ "${SUBSCRIPTION}" != "${LAST_SUBSCRIPTION}" ] ; then
 	LAST_SUBSCRIPTION="${SUBSCRIPTION}"
 	ri_flag=1
