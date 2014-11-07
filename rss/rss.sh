@@ -2,7 +2,7 @@
 RSS_DIR="${HOME}/.feed"
 TEMP_FILE=${RSS_DIR}'/.tmp'
 TITLE_FILE=${RSS_DIR}'/title'
-ITEM_FILE=${RSS_DIR}'/item_view'
+ITEM_FILE=${RSS_DIR}'/.item_view'
 SUBCRIPTION=''
 LAST_SUBSCRIPTION=''
 NOW_PAGE='Welcome'
@@ -212,19 +212,22 @@ Update(){
     OK=0
     no=1
     for i in $SUBSCRIPTION ; do
-        eval SUBSCRIPTION=\$TITLE_NAME$i
-	eval SUBSCRIPTIONURL=\$TITLE_URL$i
-	env python3 myfeed.py -u $SUBSCRIPTIONURL "$SUBSCRIPTION"
+        eval tSUBSCRIPTION=\$TITLE_NAME$i
+	eval tSUBSCRIPTIONURL=\$TITLE_URL$i
+	env python3 myfeed.py -u $tSUBSCRIPTIONURL "$tSUBSCRIPTION"
 	tmp=$(cat ${TEMP_FILE})
 	env rm ${TEMP_FILE}
 	if [ ${#tmp} -eq 0 ] ; then
-	    echo $((100 * ${no} / ${cnt}))
+	    echo $(((100 * ${no}) / ${cnt}))
+	    echo "XXX"
+	    echo "Please Wait Updating ${tSUBSCRIPTION}"
+	    echo "XXX"
 	    no=$((${no} + 1))
 	else
 	    OK=1
 	    break
 	fi
-    done | env dialog --clear --title 'Update' --guage 'Please wait' 10 50
+    done | env dialog --clear --title 'Update' --guage 'Please Wait' 20 70 0
     if [ ${OK} -eq 0 ] ; then 
 	env dialog --clear --title 'Update' --msgbox 'Success' 0 0
     else
