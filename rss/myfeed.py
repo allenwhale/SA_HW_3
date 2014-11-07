@@ -16,16 +16,16 @@ class RSS:
                 self.title = main.xpath("/html/body/rss/channel/title")[0].text
                 self.desc = main.xpath("/html/body/rss/channel/description")[0].text
                 self.items = list(zip(
-                    [ x.text.replace('\"',' ').replace('\'',' ') for x in main.xpath("/html/body/rss/channel/item[*]/title") ],
-                    [ x.text.replace('\"',' ').replace('\'',' ')for x in main.xpath('/html/body/rss/channel/item[*]/guid') ],
-                    [ x.text.replace('\"',' ').replace('\'',' ') for x in main.xpath("/html/body/rss/channel/item[*]/description") ]))
+                    [ x.text.replace('\"','\\\\\\\"') for x in main.xpath("/html/body/rss/channel/item[*]/title") ],
+                    [ x.text.replace('\"','\\\\\\\"') for x in main.xpath('/html/body/rss/channel/item[*]/guid') ],
+                    [ x.text.replace('\"','\\\\\\\"') for x in main.xpath("/html/body/rss/channel/item[*]/description") ]))
             elif main.xpath("/html/body/feed"):
                 self.title = main.xpath("/html/body/feed/title")[0].text
                 self.desc = main.xpath("/html/body/feed/subtitle")[0].text
                 self.items = list(zip(
-                    [ x.text.replace('\"',' ').replace('\'',' ') for x in main.xpath("/html/body/feed/entry[*]/title") ],
-                    [ x.text.replace('\"',' ').replace('\'',' ') for x in main.xpath('/html/body/feed/entry[*]/origlink') ],
-                    [ x.text.replace('\"',' ').replace('\'',' ') for x in main.xpath("/html/body/feed/entry[*]/content") ]))
+                    [ x.text.replace('\"','\\\\\\\"') for x in main.xpath("/html/body/feed/entry[*]/title") ],
+                    [ x.text.replace('\"','\\\\\\\"') for x in main.xpath('/html/body/feed/entry[*]/origlink') ],
+                    [ x.text.replace('\"','\\\\\\\"') for x in main.xpath("/html/body/feed/entry[*]/content") ]))
             else:
                 pass
 

@@ -1,1 +1,1 @@
-ps axouser,stat,pid|sed '1d'|sort|xargs|awk '{split($0,a);for(i=1;i<=NF;i+=3){t=a[i+1];p=0;if(u!=a[i]){u=a[i];if(i!=1)print")";print a[i];p=1}if(s!=t||p){s=t;if(!p)print")";printf"\t"s"( "}printf a[i+2]" "}print")"}'
+ps axouser,stat,pid|sed '1d'|sort -k1,2 -k3n|xargs|awk '{split($0,a);for(i=1;i<=NF;i+=3){t=a[i+1];p=0;if(u!=a[i]){u=a[i];if(i!=1)print")";print a[i];p=1}if(s!=t||p){s=t;if(!p)print")";printf"\t"s"( "}printf a[i+2]" "}print")"}'

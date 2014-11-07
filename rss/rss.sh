@@ -3,15 +3,17 @@ RSS_DIR="${HOME}/.feed"
 TEMP_FILE=${RSS_DIR}'/.tmp'
 TITLE_FILE=${RSS_DIR}'/title'
 ITEM_FILE=${RSS_DIR}'/item_view'
-SUSCRIPTION=''
+SUBCRIPTION=''
+LAST_SUBSCRIPTION=''
 NOW_PAGE='Welcome'
+welcome="      //////          /////////       /////////\n     /      /	       /               /\n    /      /         /               /\n   ///////           ////////        ////////\n  /      /                  /               /\n /        /                /               /\n/          /      /////////       /////////\n"
 mkdir ${RSS_DIR} > /dev/null 2>&1
 Welcome(){
-    env dialog --title 'RSS Reader' --msgbox 'My RSS Reader' 0 0 
+    env dialog --clear --title 'My Rss Reader' --ok-label '按我!!!' --msgbox "${welcome}" 0 0 
     NOW_PAGE='Menu'
 }
 Menu(){
-    env dialog --menu 'Choose Action' 0 0 5 'R' 'Read - read subscribed feeds' 'S' 'Subscribe - new subscription' 'D' 'Delete - delete subscription' 'U' 'Update - update subscription' 'Q' 'Bye' 2>${TEMP_FILE}
+    env dialog --clear --menu 'Choose Action' 0 0 5 'R' 'Read - read subscribed feeds' 'S' 'Subscribe - new subscription' 'D' 'Delete - delete subscription' 'U' 'Update - update subscription' 'Q' 'Bye' 2>${TEMP_FILE}
     action=$(cat ${TEMP_FILE})
     env rm ${TEMP_FILE}
     case ${action} in
@@ -36,8 +38,6 @@ Read(){
 	    return
 	fi
 	if [ $flag -eq 1 ] ; then
-	    #s=${s}' '${cnt}' '\""${line}"\"' '
-	    #s="${s} ${cnt} "\"${line}\"""
 	    s=${s}' '${cnt}' '\""${line}"\"' '
 	    flag='0'
 	    eval TITLE_NAME$cnt='${line}'
@@ -47,11 +47,11 @@ Read(){
 	fi
     done < ${TITLE_FILE}
     if [ ${#s} -eq 0 ] ; then 
-	env dialog --title 'Read' --msgbox 'No Subscription' 0 0 
+	env dialog --clear --title 'Read' --msgbox 'No Subscription' 0 0 
 	NOW_PAGE='Menu'
 	return 
     fi
-    eval env dialog --title \'Read\' --menu \'choose subscription\' 0 0 $(($cnt - 1)) ${s} 2>${TEMP_FILE}
+    eval env dialog --clear --title \'Read\' --menu \'choose subscription\' 0 0 $(($cnt - 1)) ${s} 2>${TEMP_FILE}
     if [ $? -eq 1 ] ; then 
 	NOW_PAGE='Menu'
 	return
@@ -62,24 +62,27 @@ Read(){
     NOW_PAGE='ReadItems'
 }
 ReadItems(){
-    flag=1
-    cnt=1
-    s=''
-    while read line ; do
-	if [ ${flag} -eq 1 ] ; then
-	    eval SUBTITLE${cnt}='${line}'
-	    s=${s}' '${cnt}' '\""${line}"\"' '
-	    flag=2
-	elif [ ${flag} -eq 2 ] ; then
-	    eval URL${cnt}='${line}'
-	    flag=3
-	else
-	    eval CONTENT${cnt}=\""${line}"\"
-	    cnt=$((${cnt} + 1))
-	    flag=1
-	fi
-    done < ${RSS_DIR}'/'${SUBSCRIPTION}
-    eval env dialog --title \'Read\' --menu \'choose item\' 0 0 $((${cnt} - 1)) ${s} 2>${TEMP_FILE}
+    if [ "${SUBSCRIPTION}" != "${LAST_SUBSCRIPTION}" ] ; then
+	LAST_SUBSCRIPTION="${SUBSCRIPTION}"
+	ri_flag=1
+	ri_cnt=1
+	ri_s=''
+	while read line ; do
+	    if [ ${ri_flag} -eq 1 ] ; then
+		eval SUBTITLE${ri_cnt}='${line}'
+		ri_s=${ri_s}' '${ri_cnt}' '\""${line}"\"' '
+		ri_flag=2
+	    elif [ ${ri_flag} -eq 2 ] ; then
+		eval URL${ri_cnt}='${line}'
+		ri_flag=3
+	    else
+		eval CONTENT${ri_cnt}=\""${line}"\"
+		ri_cnt=$((${ri_cnt} + 1))
+		ri_flag=1
+	    fi
+	done < ${RSS_DIR}'/'${SUBSCRIPTION}
+    fi
+    eval env dialog --clear --title \'Read\' --menu \'choose item\' 0 0 $((${ri_cnt} - 1)) ${ri_s} 2>${TEMP_FILE}
     if [ $? -eq 1 ] ; then
 	NOW_PAGE='Read'
 	return
@@ -109,11 +112,11 @@ Items(){
 	echo '' >> ${ITEM_FILE}
     fi
     echo '==============================================' >> ${ITEM_FILE}
-    env dialog --textbox ${ITEM_FILE} 0 0
+    env dialog --clear --textbox ${ITEM_FILE} 0 0
     NOW_PAGE='ReadItems'
 }
 Subscribe(){
-    env dialog  --inputbox 'Enter feed url' 0 0 2>${TEMP_FILE}
+    env dialog --clear --inputbox 'Enter feed url' 0 0 2>${TEMP_FILE}
     if [ $? -eq 1 ] ; then
 	NOW_PAGE='Menu'
 	return
@@ -121,17 +124,17 @@ Subscribe(){
     url=$(cat ${TEMP_FILE})
     env rm ${TEMP_FILE}
     if [ ${#url} -eq 0 ] ; then
-	env dialog --title 'Subscribe' --msgbox 'url can not be empty' 0 0
+	env dialog --clear --title 'Subscribe' --msgbox 'url can not be empty' 0 0
 	return
     fi
     env python3 myfeed.py -a $url
     res=$(env cat ${TEMP_FILE})
     env rm ${TEMP_FILE}
     if [ ${#res} -eq 0 ] ; then
-	env dialog --title 'Subscribe' --msgbox 'Success' 0 0
+	env dialog --clear --title 'Subscribe' --msgbox 'Success' 0 0
 	NOW_PAGE='Menu'
     else
-	env dialog --title 'Subscribe' --msgbox 'Something Wrong' 0 0
+	env dialog --clear --title 'Subscribe' --msgbox 'Something Wrong' 0 0
     fi
 }
 Delete(){
@@ -149,11 +152,11 @@ Delete(){
 	fi
     done < ${TITLE_FILE}
     if [ ${#s} -eq 0 ] ; then 
-	env dialog --title 'Delete' --msgbox 'No Subscription' 0 0
+	env dialog --clear --title 'Delete' --msgbox 'No Subscription' 0 0
 	NOW_PAGE='Menu'
 	return 
     fi
-    eval env dialog --title \'Delete\' --menu \'choose item to delete\' 0 0 ${cnt} ${s} 2>${TEMP_FILE}
+    eval env dialog --clear --title \'Delete\' --menu \'choose item to delete\' 0 0 ${cnt} ${s} 2>${TEMP_FILE}
     if [ $? -eq 1 ] ; then 
 	NOW_PAGE='Menu'
 	return
@@ -164,9 +167,9 @@ Delete(){
     env python3 myfeed.py -d "$SUBSCRIPTION"
     tmp=$(cat ${TEMP_FILE})
     if [ ${#tmp} -eq 0 ] ; then
-	env dialog --title 'Delete' --msgbox 'OK' 0 0
+	env dialog --clear --title 'Delete' --msgbox 'OK' 0 0
     else
-	env dialog --title 'Delete' --msgbox 'Something Wrong' 0 0
+	env dialog --clear --title 'Delete' --msgbox 'Something Wrong' 0 0
     fi
 }
 Update(){
@@ -185,11 +188,11 @@ Update(){
 	fi
     done < ${TITLE_FILE}
     if [ ${#s} -eq 0 ] ; then 
-	env dialog --title 'Update' --msgbox 'No Subscription' 0 0
+	env dialog --clear --title 'Update' --msgbox 'No Subscription' 0 0
 	NOW_PAGE='Menu'
 	return 
     fi
-    eval env dialog --title \'Update\' --checklist \'choose item to delete\' 0 0 ${cnt} ${s} 2>${TEMP_FILE}
+    eval env dialog --clear --title \'Update\' --checklist \'choose item to delete\' 0 0 ${cnt} ${s} 2>${TEMP_FILE}
     if [ $? -eq 1 ] ; then 
 	NOW_PAGE='Menu'
 	return
@@ -215,16 +218,16 @@ Update(){
 	    OK=1
 	    break
 	fi
-    done | env dialog --title 'Update' --guage 'Please wait' 10 50
+    done | env dialog --clear --title 'Update' --guage 'Please wait' 10 50
     if [ ${OK} -eq 0 ] ; then 
-	env dialog --title 'Update' --msgbox 'Success' 0 0
+	env dialog --clear --title 'Update' --msgbox 'Success' 0 0
     else
-	env dialog --title 'Update' --msgbox 'Something Wrong' 0 0
+	env dialog --clear --title 'Update' --msgbox 'Something Wrong' 0 0
     fi
     NOW_PAGE='Menu'
 }
 Quit(){
-    env dialog --title 'Quit?' --yesno 'Do you want to quit?' 0 0
+    env dialog --clear --title 'Quit?' --yesno 'Do you want to quit?' 0 0
     tmp=$?
     if [ $tmp -eq 1 ] ; then
 	NOW_PAGE='Menu'
