@@ -11,7 +11,7 @@ PERL='env perl'
 PYTHON2='env python'
 PYTHON3='env python3'
 RUBY='env ruby'
-HASKELL='env ghc'
+HASKELL='env runhaskell'
 LUA='env lua52'
 BASH='env bash'
 Usage(){
@@ -66,9 +66,10 @@ IFS=","
 for lang in ${LANG} ; do
     if [ ${lang} = "c" ] || [ ${lang} = "C" ] ; then
 	echo "Run in C"
-	eval "${CC} ${SOURCE} -o ${OUTPUT}"
+	eval "${CC} ${SOURCE} -o ${OUTPUT} > /dev/null 2>&1"
 	if  [ -e ${OUTPUT} ] ; then 
 	    ./${OUTPUT}
+	    env rm ./${OUTPUT}
 	else
 	    echo "C failed"
 	fi
@@ -76,50 +77,70 @@ for lang in ${LANG} ; do
     elif [ ${lang} = "c" ] || [ ${lang} = "cpp" ] || [ ${lang} = "Cpp" ] \
 	|| [ ${lang} = "c++" ] || [ ${lang} = "C++" ] ; then 
 	echo "Run in C++"
-	eval "${CPP} ${SOURCE} -o ${OUTPUT}"
+	eval "${CPP} ${SOURCE} -o ${OUTPUT} /dev/null 2>&1"
 	if  [ -e ${OUTPUT} ] ; then 
 	    ./${OUTPUT}
+	    env rm ./${OUTPUT}
 	else
 	    echo "C++ failed"
 	fi
 	echo "==================================================="
     elif [ ${lang} = "awk" ] || [ ${lang} = "AWK" ] ; then
 	echo "Run in Awk"
-	eval "${AWK} ${SOURCE}"
+	eval "${AWK} ${SOURCE} 2>/dev/null"
+	if [ $? -ne 0 ] ; then
+	    echo "Failed in Awk"
+	fi
 	echo "==================================================="
     elif [ ${lang} = "perl" ] || [ ${lang} = "Perl" ] ; then
 	echo "Run in Perl"
-	eval "${PERL} ${SOURCE}"
+	eval "${PERL} ${SOURCE} 2>/dev/null"
+	if [ $? -ne 0 ] ; then
+	    echo "Failed in Perl"
+	fi
 	echo "==================================================="
     elif [ ${lang} = "python" ] || [ ${lang} = "Python" ] || [ ${lang} = "py" ] \
 	|| [ ${lang} = "python2" ] || [ ${lang} = "Python2" ] || [ ${lang} = "py2" ] ; then
 	echo "Run in Python2"
-	eval "${PYTHON2} ${SOURCE}"
+	eval "${PYTHON2} ${SOURCE} 2>/dev/null"
+	if [ $? -ne 0 ] ; then 
+	    echo "Failed in Python2"
+	fi
 	echo "==================================================="
     elif [ ${lang} = "python3" ] || [ ${lang} = "Python3" ] || [ ${lang} = "py3" ] ; then
 	echo "Run in Python3"
-	eval "${PYTHON3} ${SOURCE}"
+	eval "${PYTHON3} ${SOURCE} 2>/dev/null"
+	if [ $? -ne 0 ] ; then
+	    echo "Failed in Python3"
+	fi
 	echo "==================================================="
     elif [ ${lang} = "ruby" ] || [ ${lang} = "Ruby" ] || [ ${lang} = "rb" ] ; then
 	echo "Run in Ruby"
-	eval "${RUBY} ${SOURCE}"
+	eval "${RUBY} ${SOURCE} 2>/dev/null"
+	if [ $? -ne 0 ] ; then 
+	    echo "Failed in Ruby"
+	fi
 	echo "==================================================="
     elif [ ${lang} = "Haskell" ] || [ ${lang} = "haskell" ] || [ ${lang} = "hs" ] ; then
 	echo "Run in Haskell"
-	eval "${HASKELL} -o ${OUTPUT} ${SOURCE}"
-	if  [ -e ${OUTPUT} ] ; then 
-	    ./${OUTPUT}
-	else
-	    echo "haskell failed"
+	eval "${HASKELL} ${SOURCE} 2>/dev/null"
+	if [ $? -ne 0 ] ; then
+	    echo "Failed in Haskell"
 	fi
 	echo "==================================================="
     elif [ ${lang} = "lua" ] || [ ${lang} = "Lua" ] ; then
 	echo "Run in Lua"
-	eval "${LUA} ${SOURCE}"
+	eval "${LUA} ${SOURCE} 2>/dev/null"
+	if [ $? -ne 0 ] ; then
+	    echo "Failed in Lua"
+	fi
 	echo "==================================================="
     elif [ ${lang} = "bash" ] || [ ${lang} = "Bash" ] ; then
 	echo "Run in Bash"
-	eval "${BASH} ${SOURCE}"
+	eval "${BASH} ${SOURCE} 2>/dev/null"
+	if [ $? -ne 0 ] ; then 
+	    echo "Failed in Bash"
+	fi
 	echo "==================================================="
     else
 	echo "language '${lang}' is undefined"
