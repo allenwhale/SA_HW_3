@@ -198,7 +198,7 @@ Update(){
 	NOW_PAGE='Menu'
 	return 
     fi
-    eval env dialog --clear --title \'Update\' --checklist \'choose item to delete\' 0 0 ${cnt} ${s} 2>${TEMP_FILE}
+    eval env dialog --clear --title \'Update\' --checklist \'choose item to update\' 0 0 ${cnt} ${s} 2>${TEMP_FILE}
     if [ $? -eq 1 ] ; then 
 	NOW_PAGE='Menu'
 	return
