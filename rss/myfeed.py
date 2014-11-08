@@ -1,35 +1,25 @@
 #!/usr/bin/env python3
+import feedparser
 import subprocess
 import lxml.html
 import argparse
 RSS_DIR = '/home/allenwhale/.feed'
 TITLE_FILE = RSS_DIR+'/title'
 TEMP_FILE = RSS_DIR+'/.tmp'
-class RSS:
-    def __init__(self, url):
-        assert(url != "")
+class myRSS():
+    def __init__(self,url):
         self.url = url
         self.title = 'None'
         self.desc = 'None'
         try:
-            main = lxml.html.parse(self.url)
-            if main.xpath("/html/body/rss"):
-                self.title = str(main.xpath("/html/body/rss/channel/title")[0].text)
-                self.desc = str(main.xpath("/html/body/rss/channel/description")[0].text)
-                self.items = list(zip(
-                    [ str(x.text).replace('\"','\\\\\\\"') for x in main.xpath("/html/body/rss/channel/item[*]/title") ],
-                    [ str(x.text).replace('\"','\\\\\\\"') for x in main.xpath('/html/body/rss/channel/item[*]/guid') ],
-                    [ str(x.text).replace('\"','\\\\\\\"') for x in main.xpath("/html/body/rss/channel/item[*]/description") ]))
-            elif main.xpath("/html/body/feed"):
-                self.title = str(main.xpath("/html/body/feed/title")[0].text)
-                self.desc = str(main.xpath("/html/body/feed/subtitle")[0].text)
-                self.items = list(zip(
-                    [ str(x.text).replace('\"','\\\\\\\"') for x in main.xpath("/html/body/feed/entry[*]/title") ],
-                    [ str(x.text).replace('\"','\\\\\\\"') for x in main.xpath('/html/body/feed/entry[*]/origlink') ],
-                    [ str(x.text).replace('\"','\\\\\\\"') for x in main.xpath("/html/body/feed/entry[*]/content") ]))
-            else:
-                pass
-
+            rss = feedparser.parse(url)
+            self.title = str(rss['feed']['title'])
+            self.desc = str(rss['feed']['subtitle'])
+            self.items = list(zip(
+                [ str(x['title']).replace('\"','\\\\\\\"')   for x in rss['entries'] ],
+                [ str(x['link']).replace('\"','\\\\\\\"')    for x in rss['entries'] ],
+                [ str(x['summary']).replace('\"','\\\\\\\"') for x in rss['entries'] ]
+                ))
         except:
             f = open(TEMP_FILE,'w')
             f.write("wrong")
@@ -44,7 +34,6 @@ class RSS:
 
     def get_items(self):
         return self.items
-
 def write_title(title_list):
     f = open(TITLE_FILE,"w")
     for i in title_list:
@@ -72,7 +61,7 @@ def get_title_list():
             tmp = None
     return title_list
 def add_feed(url):
-    rss = RSS(url)
+    rss = myRSS(url)
     title = rss.get_title()
     #items = rss.get_items()
     title_list = get_title_list()
@@ -87,7 +76,7 @@ def update_feed(url, title):
     title_list = get_title_list()
     if (title,url) not in title_list:
         return 'NExist'
-    rss = RSS(url)
+    rss = myRSS(url)
     items = rss.get_items()
     write_items(title,items)
     return None
