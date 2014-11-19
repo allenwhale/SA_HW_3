@@ -1,4 +1,5 @@
 #!/bin/sh
+#-*- coding: utf-8 -*-
 RSS_DIR="${HOME}/.feed"
 TEMP_FILE=${RSS_DIR}'/.tmp'
 TITLE_FILE=${RSS_DIR}'/title'

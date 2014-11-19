@@ -14,7 +14,10 @@ class myRSS():
         try:
             rss = feedparser.parse(url)
             self.title = str(rss['feed']['title'])
-            self.desc = str(rss['feed']['subtitle'])
+            try:
+                self.desc = str(rss['feed']['subtitle'])
+            except:
+                pass
             self.items = list(zip(
                 [ str(x['title']).replace('\"','\\\\\\\"')   for x in rss['entries'] ],
                 [ str(x['link']).replace('\"','\\\\\\\"')    for x in rss['entries'] ],
